@@ -22,7 +22,10 @@ class NSRGraph:
         self.k = int(open("input/k.txt").readline())
         self.distribution = self.get_distribution()
 
-        self.aG = self.get_auxiliary_graph()
+        self.level = int(math.pow(10, math.ceil(math.log(max(self.vertexes), 10))))
+
+        self.a_G = self.get_auxiliary_graph()
+        self.a_stochastic_matrix = self.get_auxiliary_stochastic_matrix()
 
     def get_stochastic_matrix(self):
         probabilities = open("input/st_matrix.txt").readlines()
@@ -50,16 +53,63 @@ class NSRGraph:
         return dist
 
     def get_auxiliary_graph(self):
-        level = int(math.pow(10, math.ceil(math.log(max(self.vertexes), 10))))
         edges = []
 
         for e in self.edges:
             for i in range(self.k):
-                edges.append((i * level + e[0], (i + 1) % self.k * level + e[1]))
+                edges.append((i * self.level + e[0], (i + 1) % self.k * self.level + e[1]))
 
-        aG = nx.DiGraph(edges)
-        self.plot(aG)
-        return aG
+        a_G = nx.DiGraph(edges)
+        #self.plot(a_G)
+        return a_G
+
+    def get_edge(self, l, i, j):
+        return l * self.level + i, (l + 1) % self.k * self.level + j
+
+    def get_auxiliary_stochastic_matrix(self):
+        st_matrix = {}
+
+        for l in range(1, self.k):
+            for i in self.vertexes:
+                for j in self.vertexes:
+                    st_matrix[(self.get_edge(l, i, j))] = self.original_stochastic_matrix.get((i, j), 0.0)
+
+        for i in self.vertexes:
+            for j in self.vertexes:
+                st_matrix[(self.get_edge(0, i, j))] = self.stochastic_matrix.get((i, j), 0.0)
+
+        for sink in self.sinks:
+            st_matrix[(sink, -1)] = self.stochastic_matrix[(sink, -1)]
+
+        st_matrix[(-1, -1)] = 1.0
+        return st_matrix
+
+    def count_final_probabilities(self, time=10):
+        st_matrix = self.a_stochastic_matrix.copy()
+        current_matrix = {}
+
+        vertexes = set(np.array(list(self.a_stochastic_matrix.keys())).flat)
+        list(vertexes).sort()
+
+        for _ in range(time):
+            for i in vertexes:
+                for j in vertexes:
+                    current_matrix[(i, j)] = 0.0
+                    for k in vertexes:
+                        current_matrix[(i, j)] += st_matrix.get((i, k), 0.0) * st_matrix.get((k, j), 0.0)
+
+            st_matrix = current_matrix.copy()
+
+        return st_matrix
+
+    def get_results(self, short=True):
+        final = self.count_final_probabilities()
+        items = list(final.items())
+        items.sort()
+
+        for item in items:
+            if not short or (item[0][1] == -1 and -1 < item[0][0] < self.level):
+                print('P{0} = {1}'.format(item[0], item[1]))
 
     def plot(self, graph):
         nx.draw_networkx(graph, node_color='aqua')
@@ -67,3 +117,4 @@ class NSRGraph:
 
 
 gr = NSRGraph()
+gr.get_results()
