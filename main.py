@@ -1,7 +1,14 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+import networkx.algorithms as alg
 import numpy as np
 import math
+from functools import reduce
+
+
+def find_gcd(list):
+    x = reduce(math.gcd, list)
+    return x
 
 
 class NSRGraph:
@@ -102,14 +109,41 @@ class NSRGraph:
 
         return st_matrix
 
-    def get_results(self, short=True):
+    def get_experimental_results(self, short=True):
         final = self.count_final_probabilities()
         items = list(final.items())
         items.sort()
 
+        print('Experimental results:')
+
         for item in items:
             if not short or (item[0][1] == -1 and -1 < item[0][0] < self.level):
                 print('P{0} = {1}'.format(item[0], item[1]))
+
+    def print_probability(self, v, p):
+        print('P{0} = {1}'.format((v, -1), p))
+
+    def get_theoretical_results(self):
+        if alg.components.is_strongly_connected(self.G):
+
+            print('Theoretical results:')
+
+            if find_gcd([self.k] + [len(c) for c in alg.cycles.cycle_basis(self.G.to_undirected())]) == 1:
+                for v in self.vertexes:
+                    self.print_probability(v, 1.0)
+            else:
+                rest = self.vertexes.copy()
+
+                for s in self.sinks:
+                    for v in self.vertexes:
+                        path = nx.shortest_path(self.G, source=str(v), target=str(s))
+                        if (len(path) - 1) % self.k == 0:
+                            rest.remove(v)
+
+                for v in self.vertexes:
+                    self.print_probability(v, float(v not in rest))
+        else:
+            print('Graph is not strongly connected')
 
     def plot(self, graph):
         nx.draw_networkx(graph, node_color='aqua')
@@ -117,4 +151,9 @@ class NSRGraph:
 
 
 gr = NSRGraph()
-gr.get_results()
+gr.get_experimental_results()
+print()
+gr.get_theoretical_results()
+
+
+
