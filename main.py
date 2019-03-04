@@ -13,9 +13,10 @@ def find_gcd(list):
 
 class NSRGraph:
     def __init__(self):
-        self.G = nx.read_edgelist("input/graph.txt", create_using=nx.DiGraph)
+        self.G = nx.read_edgelist("input/graph.txt", create_using=nx.DiGraph, nodetype=int,
+                                  data=(('probability', float),))
 
-        self.edges = [(int(edge[0]), int(edge[1])) for edge in self.G.edges]
+        self.edges = [(edge[0], edge[1]) for edge in self.G.edges]
         self.vertexes = set(np.array(self.edges).flat)
 
         self.n = len(self.vertexes)
@@ -35,8 +36,7 @@ class NSRGraph:
         self.a_stochastic_matrix = self.get_auxiliary_stochastic_matrix()
 
     def get_stochastic_matrix(self):
-        probabilities = open("input/st_matrix.txt").readlines()
-        st_matrix = {self.edges[i]: float(probabilities[i]) for i in range(self.m)}
+        st_matrix = {(u, v): d['probability'] for (u, v, d) in self.G.edges(data=True)}
         return st_matrix
 
     def get_sinks(self):
@@ -129,16 +129,20 @@ class NSRGraph:
             print('Theoretical results:')
 
             if find_gcd([self.k] + [len(c) for c in alg.cycles.cycle_basis(self.G.to_undirected())]) == 1:
+
                 for v in self.vertexes:
                     self.print_probability(v, 1.0)
             else:
                 rest = self.vertexes.copy()
 
                 for s in self.sinks:
-                    for v in self.vertexes:
-                        path = nx.shortest_path(self.G, source=str(v), target=str(s))
-                        if (len(path) - 1) % self.k == 0:
-                            rest.remove(v)
+                    temp = rest.copy()
+                    paths = nx.shortest_path_length(self.G, target=s)
+                    for v in rest:
+                        path_length = paths[v]
+                        if (path_length - 1) % self.k == 0:
+                            temp.remove(v)
+                    rest = temp.copy()
 
                 for v in self.vertexes:
                     self.print_probability(v, float(v not in rest))
