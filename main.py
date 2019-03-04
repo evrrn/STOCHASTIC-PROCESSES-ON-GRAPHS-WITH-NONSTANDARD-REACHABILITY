@@ -4,6 +4,9 @@ import networkx.algorithms as alg
 import numpy as np
 import math
 from functools import reduce
+#import lib
+
+dir = "input"
 
 
 def find_gcd(list):
@@ -13,7 +16,7 @@ def find_gcd(list):
 
 class NSRGraph:
     def __init__(self):
-        self.G = nx.read_edgelist("input/graph.txt", create_using=nx.DiGraph, nodetype=int,
+        self.G = nx.read_edgelist(dir + "/graph.txt", create_using=nx.DiGraph, nodetype=int,
                                   data=(('probability', float),))
 
         self.edges = [(edge[0], edge[1]) for edge in self.G.edges]
@@ -27,7 +30,7 @@ class NSRGraph:
         self.sinks = self.get_sinks()
         self.apply_sinks()
 
-        self.k = int(open("input/k.txt").readline())
+        self.k = int(open(dir + "/k.txt").readline())
         self.distribution = self.get_distribution()
 
         self.level = int(math.pow(10, math.ceil(math.log(max(self.vertexes), 10))))
@@ -40,7 +43,7 @@ class NSRGraph:
         return st_matrix
 
     def get_sinks(self):
-        pairs = [line.split() for line in open("input/sinks.txt").readlines()]
+        pairs = [line.split() for line in open(dir + "/sinks.txt").readlines()]
         sinks = {int(pair[0]): float(pair[1]) for pair in pairs}
         return sinks
 
@@ -55,7 +58,7 @@ class NSRGraph:
         self.stochastic_matrix[(-1, -1)] = 1.0
 
     def get_distribution(self):
-        pairs = [line.split() for line in open("input/dist.txt").readlines()]
+        pairs = [line.split() for line in open(dir + "/dist.txt").readlines()]
         dist = {int(pair[0]): int(pair[1]) for pair in pairs}
         return dist
 
@@ -123,13 +126,23 @@ class NSRGraph:
     def print_probability(self, v, p):
         print('P{0} = {1}'.format((v, -1), p))
 
+    def find_gcd_of_cycles_lengths_and_k(self):
+        list = [self.k] + [len(c) for c in alg.cycles.cycle_basis(self.G.to_undirected())]
+
+        for e in self.edges:
+            if (e[1], e[0]) in self.edges:
+                list += [2]
+                break
+
+        return find_gcd(list)
+
     def get_theoretical_results(self):
         if alg.components.is_strongly_connected(self.G):
 
             print('Theoretical results:')
 
-            if find_gcd([self.k] + [len(c) for c in alg.cycles.cycle_basis(self.G.to_undirected())]) == 1:
-
+            # if find_gcd([self.k] + [len(c) for c in alg.cycles.cycle_basis(lib.to_undirected(self.G))]) == 1:
+            if self.find_gcd_of_cycles_lengths_and_k() == 1:
                 for v in self.vertexes:
                     self.print_probability(v, 1.0)
             else:
@@ -140,7 +153,7 @@ class NSRGraph:
                     paths = nx.shortest_path_length(self.G, target=s)
                     for v in rest:
                         path_length = paths[v]
-                        if (path_length - 1) % self.k == 0:
+                        if path_length % self.k == 0:
                             temp.remove(v)
                     rest = temp.copy()
 
