@@ -118,19 +118,28 @@ class NSRGraph:
 
         return st_matrix
 
-    def get_experimental_results(self, short=True):
+    def _print_probability(self, v, p):
+        print('P{0} = {1}'.format((v, -1), p))
+
+    def count_experimental_results(self, short=True):
         final = self.count_final_probabilities()
         items = list(final.items())
         items.sort()
 
-        print('Experimental results:')
+        results = {}
 
         for item in items:
             if not short or (item[0][1] == -1 and -1 < item[0][0] < self.level):
-                print('P{0} = {1}'.format(item[0], item[1]))
+                results[item[0][0]] = item[1]
 
-    def _print_probability(self, v, p):
-        print('P{0} = {1}'.format((v, -1), p))
+        return results
+
+    def get_experimental_results(self):
+        print('Experimental results:')
+        results = self.count_experimental_results()
+
+        for (v, p) in results.items():
+            self._print_probability(v, p)
 
     def find_gcd_of_cycles_lengths_and_k(self):
         list = [self.k] + [len(c) for c in alg.cycles.cycle_basis(self.G.to_undirected())]
@@ -142,30 +151,35 @@ class NSRGraph:
 
         return find_gcd(list)
 
-    def get_theoretical_results(self):
-        if alg.components.is_strongly_connected(self.G):
-
-            print('Theoretical results:')
-
-            if self.find_gcd_of_cycles_lengths_and_k() == 1:
-                for v in self.vertexes:
-                    self._print_probability(v, 1.0)
-            else:
-                rest = self.vertexes.copy()
-
-                for s in self.sinks:
-                    temp = rest.copy()
-                    paths = nx.shortest_path_length(self.G, target=s)
-                    for v in rest:
-                        path_length = paths[v]
-                        if path_length % self.k == 0:
-                            temp.remove(v)
-                    rest = temp.copy()
-
-                for v in self.vertexes:
-                    self._print_probability(v, float(v not in rest))
+    def count_theoretical_results(self):
+        if self.find_gcd_of_cycles_lengths_and_k() == 1:
+            results = {v: 1.0 for v in self.vertexes}
         else:
+            rest = self.vertexes.copy()
+
+            for s in self.sinks:
+                temp = rest.copy()
+                paths = nx.shortest_path_length(self.G, target=s)
+                for v in rest:
+                    path_length = paths[v]
+                    if path_length % self.k == 0:
+                        temp.remove(v)
+                rest = temp.copy()
+
+            results = {v: float(v not in rest) for v in self.vertexes}
+
+        return results
+
+    def get_theoretical_results(self):
+        if not alg.components.is_strongly_connected(self.G):
             print('Graph is not strongly connected')
+            return
+
+        print('Theoretical results:')
+        results = self.count_theoretical_results()
+
+        for (v, p) in results.items():
+            self._print_probability(v, p)
 
     def plot(self, graph):
         nx.draw_networkx(graph, node_color='aqua')
