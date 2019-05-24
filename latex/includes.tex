@@ -1,0 +1,264 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{amsbsy}
+\usepackage{cmmib57}
+\usepackage{amssymb}
+%\usepackage{algorithm2e}
+\usepackage[ruled,vlined]{algorithm2e}
+%\usepackage{hyperref}
+
+\usepackage{dsfont} % real
+\usepackage{amsmath}
+\usepackage{upref}
+\usepackage{multicol}
+
+%%\usepackage[isolatin,cp1251]{inputenc}
+%%\usepackage[english,russian]{babel}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{verbatim}
+
+\graphicspath{{img/}}
+
+%% Page Style
+%\headheight=14pt \headsep=14pt \textheight=255mm \topskip=0pt
+%\textwidth=165mm \oddsidemargin=5mm
+%\evensidemargin=-5mm%0mm
+%\parindent1.1cm
+%\topmargin=-15mm \footskip=0pt
+%\parindent1.1cm
+%\pagestyle{empty}
+
+\usepackage[left=2.5cm,right=2cm,top=2.5cm, bottom=2.5cm]{geometry}%поля
+
+\usepackage{makeidx}
+%\usepackage[a5paper,%
+%twosideshift=12pt,%
+%body={114 true mm,170 true mm},%
+%totalheight=178true mm%
+%]{geometry}
+
+\DeclareGraphicsRule{.bmp}{bmp}{}{}
+
+%%%% sectioning and headings
+\numberwithin{equation}{section}
+
+\newif\iffirstinpart
+\firstinpartfalse
+
+\usepackage[bf,small,center,compact,aftersep,indentfirst,clearempty,pagestyles]{titlesec}
+%%%
+\titlelabel{\thetitle.\quad}
+
+\newcommand{\partbreak}{\cleardoublepage\thispagestyle{empty}\global\firstinparttrue\relax}
+\newcommand{\chapterbreak}{\iffirstinpart \relax\else\clearpage \fi\relax%%
+  \thispagestyle{empty}\global\firstinpartfalse\typeout{chapterbreak}}
+
+% Table of contents
+\makeatletter
+\renewcommand{\tableofcontents}{\chaptera{Содержание}\@starttoc{toc}}
+\renewcommand{\@dotsep}{2}
+\renewcommand{\l@section}{\@dottedtocline{1}{1.5em}{2.3em}}
+\newcommand{\l@chapter}{\vspace{0.5cm}\@dottedtocline{0}{0em}{2.3em}}
+\newcommand{\l@chaptera}{\vspace{0.5cm}\@dottedtocline{0}{0em}{2.3em}}
+\makeatother
+
+%% Environments
+\newcounter{chapter}
+\newcounter{chaptera}
+
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thechaptera}{\arabic{chaptera}}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+
+\numberwithin{equation}{section}
+
+\newcommand{\chaptera}[1]{%
+\clearpage\refstepcounter{chaptera}
+\addcontentsline{toc}{chaptera}{#1}
+{\huge\bfseries #1 \Large \vskip14pt}}
+
+\newcommand{\chapter}[1]{%
+\clearpage\refstepcounter{chapter}
+\setcounter{section}{0}
+\addcontentsline{toc}{chapter}{\textbf{Глава \thechapter.} #1}
+{\huge\bfseries  Глава \thechapter\\ \\ #1 \Large \vskip 1cm}}
+
+\renewcommand{\section}[1]{%
+\refstepcounter{section}%
+\setcounter{subsection}{0}
+\addcontentsline{toc}{section}{\thesection. #1} {\vskip 14pt
+\LARGE\bfseries\,\thesection\; #1\Large\vskip 10pt}}
+
+\renewcommand{\subsection}[1]
+{\refstepcounter{subsection}%
+{\vskip 10pt \bfseries\,\thesubsection\;  #1}}
+
+%%%%
+
+\setcounter{tocdepth}{1}
+\emergencystretch=1.25pt\relax
+\hfuzz=0.5pt\relax
+\tolerance=250\relax
+
+\newcommand{\ac}[1]{#1}
+\newcommand{\acs}[1]{#1}
+%%%-----------------------------------------------------------------/
+
+\newenvironment{proof}[1]{\samepage$\nabla$ \textit{Доказательство.} #1}{\\ \rightline{$\Delta$}}
+
+\makeindex
+
+\setlength{\abovedisplayskip}{2.5pt}
+\setlength{\belowdisplayskip}{2.5pt}
+\setlength{\abovedisplayshortskip}{1.25pt}
+\setlength{\belowdisplayshortskip}{1.25pt} \setlength{\jot}{0.0pt}
+%\theoremstyle{plain} \setlength{\theorempreskipamount}{1mm}
+%\setlength{\theorempostskipamount}{1mm}
+
+% Define Theorem
+\newcounter{theorem}[section]\numberwithin{theorem}{section}
+\newenvironment{theorem}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{theorem}%
+\ifx0#1{\bfseries Теорема \thesection.\arabic{theorem}. \hskip 8pt}%
+\else{\bfseries Теорема \thesection.\arabic{theorem} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define Example
+\newcounter{example}[section]\numberwithin{example}{section}
+\newenvironment{example}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{example}%
+\ifx0#1{\bfseries Пример \thesection.\arabic{example}. \hskip 8pt}%
+\else{\bfseries Пример \thesection.\arabic{example} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define Lemma
+\newcounter{lemma}[section]\numberwithin{lemma}{section}
+\newenvironment{lemma}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{lemma}%
+\ifx0#1{\bfseries Лемма \thesection.\arabic{lemma}.\hskip 8pt}%
+\else{\bfseries Лемма \thesection.\arabic{lemma} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define Definition
+\newcounter{definition}[section]\numberwithin{definition}{section}
+\newenvironment{definition}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{definition}%
+\ifx0#1{\bfseries Определение \thesection.\arabic{definition}.\hskip 8pt}%
+\else{\bfseries Определение \thesection.\arabic{definition} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define Zamechanie
+\newcounter{zam}[section]\numberwithin{zam}{section}
+\newenvironment{zam}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{zam}%
+\ifx0#1{\bfseries Замечание \thesection.\arabic{zam}.\hskip 8pt}%
+\else{\bfseries Замечание \thesection.\arabic{zam} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define Primer
+\newcounter{prim}[section]\numberwithin{prim}{section}
+\newenvironment{prim}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{prim}%
+\ifx0#1{\bfseries Пример \thesection.\arabic{prim}. }%
+\else{\bfseries Пример \thesection.\arabic{prim} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define Algorithm
+\newcounter{alg}[section]\numberwithin{alg}{section}
+\newenvironment{alg}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{alg}%
+\ifx0#1{\bfseries Алгоритм \thesection.\arabic{alg}. \hskip 8pt}%
+\else{\bfseries Алгоритм \thesection.\arabic{alg} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define PrimerDopoln
+\newcounter{prm}[section]\numberwithin{prm}{section}
+\newenvironment{prm}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{prm}%
+\ifx0#1{\bfseries Пример \arabic{prm}. }%
+\else{\bfseries Пример \arabic{prm} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define DefinitionDopoln
+\newcounter{defn}[section]\numberwithin{defn}{section}
+\newenvironment{defn}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{defn}%
+\ifx0#1{\bfseries Определение \arabic{defn}.\hskip 8pt}%
+\else{\bfseries Определение \arabic{defn} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+% Define TheoremDopoln
+\newcounter{thm}[section]%\numberwithin{theorem}{section}
+\newenvironment{thm}[1][0]{\par\vspace{3mm plus 1mm minus 1mm}\noindent%
+\refstepcounter{thm}%
+\ifx0#1{\bfseries Теорема \arabic{thm}. \hskip 8pt}%
+\else{\bfseries Теорема \arabic{thm} {\normalfont(#1)}.}%
+\fi\itshape } {\normalfont\par\vspace{2mm}}
+
+%\newcommand{\contsection}[1]{\begin{center}#1\end{center}}
+%\newcommand{\contline}[2]{\noindent#2\dotfill\pageref{#1}\vspace{1mm}\\}
+%\newcommand{\contlines}[2]{\noindent#2\dotfill#1\vspace{1mm}\\}
+
+\newcounter{conditioncounter}
+\newenvironment{conditionsnum}{\begin{list}
+{\rm(\arabic{conditioncounter})} {\usecounter{conditioncounter}
+\leftmargin=10mm \labelsep=3mm \labelwidth=15mm \topsep=0pt plus
+1pt
+\parsep=0pt plus 1pt}}
+{\end{list}}
+
+\newenvironment{conditionslet}{\begin{list}
+{\rm(\alph{conditioncounter})} {\usecounter{conditioncounter}
+\leftmargin=10mm \labelsep=3mm \labelwidth=15mm \topsep=0pt plus
+1pt
+\parsep=0pt plus 1pt}}
+{\end{list}}
+
+\newcommand{\impl}[2]{{\rm(#1)} $\Rightarrow$ {\rm(#2)}}
+
+\newcounter{bibl}
+\setcounter{bibl}{0}
+\newcommand{\bibl}[1]
+  {\item[\refstepcounter{bibl}{[\thebibl]}\label{bibl:#1}]}
+\renewcommand{\cite}[1]{[\ref{bibl:#1}]}
+\newcommand{\cites}[1]{\ref{bibl:#1}}
+%\newcommand{\nl}{\mbox{}\\}
+
+\renewcommand{\arraystretch}{1.3}
+\setlength{\arraycolsep}{1pt}
+
+
+%%%%рисунки
+%\newcounter{ё}[chapter]
+\numberwithin{figure}{chapter}
+\renewenvironment{figure}[2]{\vskip14pt%
+\refstepcounter{figure}%
+\center #2 \\
+\large \center Рис. \thefigure:\: #1 \Large}
+{\vskip14pt}%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\phi}{\varphi}
+\newcommand{\dd}{\partial}
+
+% Переопределение le ge в русских традициях
+\renewcommand{\le}{\leqslant}
+%\renewcommand{\leq}{\leqslant}
+\renewcommand{\ge}{\geqslant}
+%\renewcommand{\geq}{\geqslant}
+
+\begin{document}
+	\Large
+	\sloppy \baselineskip=8mm 
+	
+	%\makeatletter
+	%\renewcommand{\@oddhead}{\large\hfill---\,\thepage\,---\hfill}
+	%\makeatother
+	
+	\input{plan.tex}	
+				
+\end{document}
