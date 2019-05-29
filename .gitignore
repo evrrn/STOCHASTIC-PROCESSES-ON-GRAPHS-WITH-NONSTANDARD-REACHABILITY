@@ -3,6 +3,7 @@ venv
 *.log
 *.out
 *.aux
+*.idx
 *.fdb_latexmk
 *.bbl
 *.bcf
@@ -13,6 +14,5 @@ venv
 *.sublime-project
 *.sublime-workspace
 *.fls
-*.pdf
 *.toc
 **/__pycache__/*
