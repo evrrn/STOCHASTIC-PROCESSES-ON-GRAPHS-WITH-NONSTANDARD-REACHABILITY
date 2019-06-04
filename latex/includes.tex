@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{upref}
 \usepackage{multicol}
+\usepackage{caption}
 
 %%\usepackage[isolatin,cp1251]{inputenc}
 %%\usepackage[english,russian]{babel}
@@ -76,6 +77,8 @@
 \renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
 
 \numberwithin{equation}{section}
+\numberwithin{table}{chapter}
+\numberwithin{section}{chapter}
 
 \newcommand{\chaptera}[1]{%
 \clearpage\refstepcounter{chaptera}
@@ -85,8 +88,8 @@
 \newcommand{\chapter}[1]{%
 \clearpage\refstepcounter{chapter}
 \setcounter{section}{0}
-\addcontentsline{toc}{chapter}{\textbf{Глава \thechapter.} #1}
-{\huge\bfseries  Глава \thechapter\\ \\ #1 \Large \vskip 1cm}}
+\addcontentsline{toc}{chapter}{\textbf{\thechapter.} #1}
+{\huge\bfseries  \thechapter\ \ #1 \Large \vskip 1cm}}
 
 \renewcommand{\section}[1]{%
 \refstepcounter{section}%
@@ -253,12 +256,6 @@
 
 \begin{document}
 	\Large
-	\sloppy \baselineskip=8mm 
-	
-	%\makeatletter
-	%\renewcommand{\@oddhead}{\large\hfill---\,\thepage\,---\hfill}
-	%\makeatother
-	
-	\input{plan.tex}	
-				
+	\sloppy \baselineskip=8mm 	
+	\input{plan.tex}					
 \end{document}
