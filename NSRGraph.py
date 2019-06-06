@@ -5,11 +5,11 @@ import numpy as np
 import math
 from functools import reduce
 
-dir = "input"
+dir = "input_2"
 
 
-def find_gcd(list):
-    x = reduce(math.gcd, list)
+def find_gcd(_list):
+    x = reduce(math.gcd, _list)
     return x
 
 
@@ -142,14 +142,17 @@ class NSRGraph:
             self._print_probability(v, p)
 
     def find_gcd_of_cycles_lengths_and_k(self):
-        list = [self.k] + [len(c) for c in alg.cycles.cycle_basis(self.G.to_undirected())]
+        _list = [self.k] + [len(c) for c in alg.cycles.simple_cycles(self.G)]
 
         for e in self.edges:
+            if e[0] == e[1]:
+                return 1
+
             if (e[1], e[0]) in self.edges:
-                list += [2]
+                _list += [2]
                 break
 
-        return find_gcd(list)
+        return find_gcd(_list)
 
     def count_theoretical_results(self):
         if self.find_gcd_of_cycles_lengths_and_k() == 1:
@@ -185,11 +188,27 @@ class NSRGraph:
         nx.draw_networkx(graph, node_color='aqua')
         plt.show()
 
+    def compare_results(self, exp_results, th_results):
+        errors = {}
 
-gr = NSRGraph.from_files()
-gr.get_experimental_results()
-print()
-gr.get_theoretical_results()
+        for (v, p) in exp_results.items():
+            if abs(p - th_results[v]) > 0.1:
+                errors[v] = [p, th_results[v]]
+
+        print(th_results)
+
+        if errors:
+            print(self.edges)
+            print('errors:')
+            print(errors)
+        else:
+            print('ok')
+
+
+if __name__ == '__main__':
+    gr = NSRGraph.from_files()
+    gr.compare_results(gr.count_experimental_results(), gr.count_theoretical_results())
+
 
 
 
