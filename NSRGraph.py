@@ -14,7 +14,7 @@ def find_gcd(_list):
 
 
 class NSRGraph:
-    def __init__(self, edges, sinks, k):
+    def __init__(self, edges, dist, sinks, k):
         self.G = nx.parse_edgelist(edges, create_using=nx.DiGraph, nodetype=int, data=(('probability', float),))
 
         self.edges = [(edge[0], edge[1]) for edge in self.G.edges]
@@ -25,6 +25,9 @@ class NSRGraph:
 
         self.stochastic_matrix = self._get_stochastic_matrix()
         self.original_stochastic_matrix = self.stochastic_matrix.copy()
+
+        self.dist = dist
+
         self.sinks = sinks
         self._apply_sinks()
 
@@ -42,13 +45,16 @@ class NSRGraph:
         pairs = [line.split() for line in open(dir + "/sinks.txt").readlines()]
         sinks = {int(pair[0]): float(pair[1]) for pair in pairs}
 
+        pairs = [line.split() for line in open(dir + "/dist.txt").readlines()]
+        dist = {int(pair[0]): int(pair[1]) for pair in pairs}
+
         k = int(open(dir + "/k.txt").readline())
 
-        return cls(edges, sinks, k)
+        return cls(edges, dist, sinks, k)
 
     @classmethod
-    def from_params(cls, edges, sinks, k):
-        return cls(edges, sinks, k)
+    def from_params(cls, edges, dist, sinks, k):
+        return cls(edges, dist, sinks, k)
 
     def _get_stochastic_matrix(self):
         st_matrix = {(u, v): d['probability'] for (u, v, d) in self.G.edges(data=True)}
@@ -63,11 +69,6 @@ class NSRGraph:
                     self.stochastic_matrix[(sink, -1)] = self.sinks[sink]
 
         self.stochastic_matrix[(-1, -1)] = 1.0
-
-    def get_distribution(self):
-        pairs = [line.split() for line in open(dir + "/dist.txt").readlines()]
-        dist = {int(pair[0]): int(pair[1]) for pair in pairs}
-        return dist
 
     def _get_auxiliary_graph(self):
         edges = []
@@ -122,8 +123,8 @@ class NSRGraph:
         print('P{0} = {1}'.format((v, -1), p))
 
     def count_experimental_results(self, short=True):
-        final = self.count_final_probabilities()
-        items = list(final.items())
+        probabilities = self.count_final_probabilities()
+        items = list(probabilities.items())
         items.sort()
 
         results = {}
@@ -184,6 +185,23 @@ class NSRGraph:
         for (v, p) in results.items():
             self._print_probability(v, p)
 
+    def erase_level(self, v):
+        if v == -1:
+            return v
+        return v % self.level
+
+    def get_next_distribution(self, times=10):
+        probabilities = self.count_final_probabilities(times)
+        distribution = {v: 0 for v in self.vertexes}
+        distribution[-1] = 0
+
+        for k in probabilities.keys():
+            if -1 < k[0] < self.level:
+                vertexes = (k[0], self.erase_level(k[1]))
+                distribution[vertexes[1]] += round(probabilities[k] * self.dist.get(vertexes[0], 0.0))
+
+        return distribution
+
     def plot(self, graph):
         nx.draw_networkx(graph, node_color='aqua')
         plt.show()
@@ -191,8 +209,8 @@ class NSRGraph:
     def compare_results(self, exp_results, th_results):
         errors = {}
 
-        for (v, p) in exp_results.items():
-            if abs(p - th_results[v]) > 0.1:
+        for (v, p) in th_results.items():
+            if abs(p - exp_results[v]) > 0.1:
                 errors[v] = [p, th_results[v]]
 
         print(th_results)
@@ -208,6 +226,7 @@ class NSRGraph:
 if __name__ == '__main__':
     gr = NSRGraph.from_files()
     gr.compare_results(gr.count_experimental_results(), gr.count_theoretical_results())
+    print(gr.get_next_distribution())
 
 
 
