@@ -26,7 +26,10 @@ class NSRGraph:
         self.stochastic_matrix = self._get_stochastic_matrix()
         self.original_stochastic_matrix = self.stochastic_matrix.copy()
 
-        self.dist = dist
+        self.dist = {v: 0 for v in self.vertexes}
+        self.dist[-1] = 0
+        for v in dist.keys():
+            self.dist[v] = dist[v]
 
         self.sinks = sinks
         self._apply_sinks()
@@ -191,7 +194,11 @@ class NSRGraph:
         return v % self.level
 
     def get_next_distribution(self, times=10):
+        if times == 0:
+            return self.dist
+
         probabilities = self.count_final_probabilities(times)
+
         distribution = {v: 0 for v in self.vertexes}
         distribution[-1] = 0
 
