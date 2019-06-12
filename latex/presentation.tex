@@ -1,0 +1,287 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian,english]{babel}
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+
+\setbeamercolor{footline}{}
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+    А. А. Елизарова (Мехмат ЮФУ)
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+    Ростов-на-Дону, 2019
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{}%
+  Стр. \insertframenumber{} из \inserttotalframenumber \hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{\small{СЛУЧАЙНЫЕ ПРОЦЕССЫ НА ГРАФАХ С\\ОСОБЫМИ ВИДАМИ НЕСТАНДАРТНОЙ\\ДОСТИЖИМОСТИ}}
+\vspace{15pt}%
+\author{\small{%
+А. А. Елизарова\\%
+\emph{Направление подготовки:}~Прикладная математика и\\информатика\\%
+\emph{Научный руководитель:}~проф., д.ф.-м.н. В. А. Скороходов}\\%
+\vspace{15pt}%
+    Южный федеральный университет\\
+    Институт математики, механики и компьютерных наук
+    имени~И.\,И.\,Воровича%
+}
+\date{\small{Ростов-на-Дону, 2019}}
+
+\begin{document}
+
+	\begin{frame}
+		\titlepage % Print the title page as the first slide
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Содержание} % Table of contents slide, comment this block out to remove it
+		\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+	\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------
+\section{Постановка задачи}
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Постановка задачи}
+
+	\begin{itemize}
+		\item исследовать графы с глобальными условиями на достижимость,
+		\item разработать методы решения классических задач на графах с
+		глобальными условиями на достижимость,
+		\item рассмотреть задачу о случайном блуждании частиц на графах с глобальными условиями на достижимость,
+		\item предложить методы нахождения предельного распределения для
+		исследуемого процесса случайного блуждания.
+	\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------
+\section{Графы с нестандартной достижимостью}
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Основные характеристики графов с нестандартной достижимостью}
+
+	\begin{block}{Числовая характеристика произвольного пути}
+		Числовой характеристикой произвольного пути $\mu$ называется отображение $\psi_\mu:N\to Z$, причём эта характеристика определяется рекуррентно по последней дуге пути с помощью некоторой заданной функции, a $\psi_\mu(0) = 0$.
+	\end{block}
+	
+	\begin{block}{Формальное ограничение на достижимость}
+		Выделяют два типа формальных ограничений:
+		\begin{itemize}
+			\item строгие --- следующая дуга пути обязана принадлежать конкретному подмножеству дуг графа;
+			\item нестрогие --- следующая дуга пути обязана принадлежать этому подмножеству, только если среди инцидентных текущей вершине дуг есть хотя бы одна такая дуга.
+		\end{itemize}
+	
+	\end{block}
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Пример глобального условия на достижимость}
+
+	\begin{block}{Постановка условия}
+		Рассмотрим орграф $G(X,U,f)$, в котором дуги разделены на два непересекающихся множества: стандартные $U_s$ и остаточные $U_o$. Формальное ограничение на достижимость: путь на графе $G$ допустимый, если в нем содержится количество остаточных дуг, кратное фиксированному целому числу $p$ ($|p| > 1$). 
+	\end{block}
+
+	Особенности:
+	\begin{itemize}
+		\item нет рекурсивности: ни сохранение, ни смена кратности в середине пути не имеет значения, важна лишь кратность в конце пути;
+		\item префикс допустимого пути не обязательно допустим.
+	\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Сравнение локальных и глобальных условий на достижимость}
+	
+	\begin{table}
+		\begin{tabular}{l | c | c }
+			& Локальные условия    & Глобальные условия \\
+			\hline \hline
+			Рекурсивный            & Да, по правилу строгого    & Нет, не применимо \\
+			выбор пути			   & /нестрогого условия	    & \\
+			\hline \hline
+			Модульность            & Да, префикс допустимого    & Нет, не применимо \\
+			пути			       & пути всегда допустим       & \\
+			\hline \hline
+			Проверка               & Да, если путь не является  & Нет, любая часть, \\
+			части пути			   & допустимым, можно 			& меньшая целого пути, \\
+								   & выделить часть, которая    & не даст проверить \\
+								   & также не является      	& условие на достижимость \\
+			                       & допустимым путем
+		\end{tabular}
+	\end{table}
+	
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Сведение задач на графах с глобальным условием на достижимость к задачам на классических графах}
+
+	\begin{enumerate}
+		\item предложен алгоритм построения вспомогательного графа;
+		\item доказана теорема о соответствии любого пути на вспомогательном графе некоторому пути на исходном графе;
+		\item задачи, сформулированные для исходного графа, можно решать классическими алгоритмами на вспомогательном графе: глобальные условия на достижимость учтены по построению.
+	\end{enumerate}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------
+\section{Случайные процессы на графах с глобальными условиями на достижимость}
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Случайные процессы на графах с глобальными условиями на достижимость: формулировка задачи}
+
+	\begin{itemize}
+		\item орграф $G(X,U,f)$ --- сильно связный;
+		
+		\item $U_s = \emptyset$ и $U_o = U$ (частный случай);
+		
+		\item случайное блуждение частиц по графу задаётся матрицей переходов $P$;
+		
+		\item определено множество выходных вершин: из них можно попасть в отдельный от графа сток $s$, если путь частицы до выходной вершины является допустимым в соответствии с глобальным условием на кратность;
+		
+		\item требуется найти количество частиц, которые покинут граф в пределе, и распределение оставшихся частиц по вершинам.
+	\end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Методы решения}
+
+	\begin{block}{Ищем множества $X_{in}$ и $X_{out}$}
+	
+		\begin{enumerate}
+			\item «наивный»: если среди длин контуров графа и параметра $p$ есть взаимно простые числа, все частицы покинут граф, иначе можем выделить вершины, относящиеся к $X_{in}$;
+			
+			\item вычислительный: имея вспомогательный граф, строим его матрицу переходов, возводим в достаточно большую степень и анализируем вероятности;
+			
+			\item теоретический: анализируем компоненты сильной связности вспомогательного графа.
+		\end{enumerate}
+	
+	\end{block}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+%-----------------------------------------------------------------------------------------
+\section{Результаты}
+%-----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Результаты}
+
+	\begin{enumerate}
+		\item рассмотрен пример глобального условия на достижимость --- условие проверки кратности;
+		\item для условия проверки кратности описан алгоритм построения вспомогательного графа и доказана теорема о соответствии путей на исходном и вспомогательном графе;
+		\item решена задача о предельном состоянии процесса случайного блуждания частиц на графе с условием проверки кратности.
+	\end{enumerate} 
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------
+
+\end{document}
